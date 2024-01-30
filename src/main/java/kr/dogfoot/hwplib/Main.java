@@ -22,16 +22,29 @@ public class Main {
         }
 
         public void begin() throws IOException {
+            if (this.dst == null) {
+                return;
+            }
+
             File file = new File(this.dst);
             file.getParentFile().mkdirs();
             this.writer = new FileWriter(file);
         }
 
         public void end() throws IOException {
+            if (this.dst == null) {
+                return;
+            }
+
             this.writer.close();
         }
 
         public void paragraphText(String text) {
+            if (this.dst == null) {
+                System.out.print(text);
+                return;
+            }
+
             try {
                 this.writer.write(text);
             } catch (Throwable e) {
@@ -41,13 +54,13 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length < 2) {
+        if (args.length < 1) {
             System.exit(1);
             return;
         }
 
         String src = args[0];
-        String dst = args[1];
+        String dst = args.length > 1 ? args[1] : null;
 
         TextExtractOption option = new TextExtractOption();
         option.setMethod(TextExtractMethod.OnlyMainParagraph);
